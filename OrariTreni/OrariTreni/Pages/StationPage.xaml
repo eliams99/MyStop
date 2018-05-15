@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OrariTreni.Pages.StationPage">
+    <ContentPage.Title>Stazione</ContentPage.Title>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="FavoritesToolbarItem" Name="Preferiti" Order="Primary" Clicked="FavoritesToolbarItemClicked" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="HeaderStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+            
+            <DataTemplate x:Key="TitleTemplate">
+                <ViewCell>
+                    <Label Text="{Binding Title}" Margin="12" />
+                </ViewCell>
+            </DataTemplate>
+
+            <DataTemplate x:Key="TrainTemplate">
+                <ViewCell>
+                    <Grid Padding="6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="23*" />
+                            <ColumnDefinition Width="15*" />
+                            <ColumnDefinition Width="62*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="{Binding TrainNumber}" VerticalOptions="Center" Margin="6" />
+
+                        <Label Grid.Column="1" Text="{Binding Time, StringFormat='{}{0:HH:mm }'}" VerticalOptions="Center" Margin="6" />
+
+                        <Label Grid.Column="2" Text="{Binding Destination}" Style="{StaticResource HeaderStyle}" Margin="6" />
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content Padding="0" >
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="1, 1, 1, 1"
+                        AbsoluteLayout.LayoutFlags="All" IsVisible="true">
+            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Margin="24"
+                               HorizontalOptions="Center" VerticalOptions="Center"
+                               AbsoluteLayout.LayoutBounds="1, 1, 1, 1"
+                               AbsoluteLayout.LayoutFlags="All" />
+
+            <ListView x:Name="TrainsListView"
+                      HasUnevenRows="True"
+                      RowHeight="-1"
+                      ItemTemplate="{StaticResource TrainTemplate}"
+                      IsGroupingEnabled="true"
+                      GroupDisplayBinding="{Binding Title}"
+                      GroupHeaderTemplate="{StaticResource TitleTemplate}"
+                      IsPullToRefreshEnabled="True"
+                      RefreshCommand="{Binding RefreshCommand}"
+                      IsRefreshing="{Binding IsRefreshing}"
+                      VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                      AbsoluteLayout.LayoutBounds="1, 1, 1, 1"
+                      AbsoluteLayout.LayoutFlags="All"
+                      ItemTapped="OnTrainTapped" />
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

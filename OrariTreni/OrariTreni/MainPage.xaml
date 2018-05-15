@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:OrariTreni"
+             x:Class="OrariTreni.MainPage">
+
+    <ContentPage.Title>Cerca stazione</ContentPage.Title>
+
+    <ContentPage.ToolbarItems>
+        <!--<ToolbarItem x:Name="ChartsToolbarItem" Name="Grafici" Order="Primary" Clicked="ChartsToolbarItemClicked" />-->
+        <ToolbarItem x:Name="AboutToolbarItem" Name="Info" Order="Primary" Clicked="AboutToolbarItemClicked" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="HeaderStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <DataTemplate x:Key="TrainTemplate">
+                <ViewCell>
+                    <StackLayout>
+                        <Label Grid.Column="1" Text="{Binding StationName}" Margin="6" />
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackLayout Orientation="Horizontal" Padding="12" >
+                <Entry x:Name="StationEntry" HorizontalOptions="FillAndExpand" Placeholder="Inserisci nome stazione" Margin="6" />
+
+                <Picker x:Name="StationPicker" HorizontalOptions="FillAndExpand" IsVisible="False" Margin="6" />
+
+                <Button x:Name="SearchStationButton" Text="Cerca" Clicked="OnSearchStationButtonClicked" Margin="6" />
+            </StackLayout>
+
+            <Grid Grid.Row="1">
+                <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                                AbsoluteLayout.LayoutBounds="1, 1, 1, 1" AbsoluteLayout.LayoutFlags="All" IsVisible="true">
+                    <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Margin="24"
+                               HorizontalOptions="Center" VerticalOptions="Center"
+                               AbsoluteLayout.LayoutBounds="1, 1, 1, 1"
+                               AbsoluteLayout.LayoutFlags="All" />
+
+                    <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                                 AbsoluteLayout.LayoutBounds="1, 1, 1, 1" AbsoluteLayout.LayoutFlags="All" >
+                        <Label Text="Stazioni Preferite:" Margin="12" />
+
+                        <ListView x:Name="FavoriteStationsListView"
+                                  IsVisible="True"
+                                  HasUnevenRows="True" RowHeight="-1"
+                                  VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                                  ItemTapped="OnStationTapped" />
+                    </StackLayout>
+                </AbsoluteLayout>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

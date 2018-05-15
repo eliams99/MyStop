@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OrariTreni.Pages.TrainPage">
+  <!--Pages can be added as references or inline-->
+    <TabbedPage.Title>Scheda treno</TabbedPage.Title>
+
+    <TabbedPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="HeaderStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+            <Style x:Key="NormalStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+        </ResourceDictionary>
+    </TabbedPage.Resources>
+    
+    <ContentPage Title="Dettagli" >
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="1, 1, 1, 1"
+                        AbsoluteLayout.LayoutFlags="All" IsVisible="true">
+            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Margin="24"
+                               HorizontalOptions="Center" VerticalOptions="Center"
+                               AbsoluteLayout.LayoutBounds="1, 1, 1, 1"
+                               AbsoluteLayout.LayoutFlags="All" />
+
+            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="1, 1, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Horizontal" Padding="6">
+                    <Label Text="{Binding TrainNumber}" Style="{StaticResource NormalStyle}" Margin="6" />
+
+                    <Label Text="{Binding Time, StringFormat='{}{0:HH:mm }'}" Style="{StaticResource NormalStyle}" Margin="6" />
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal" Padding="6">
+                    <Label Text="Destinazione:" VerticalOptions="Center" Margin="6" />
+
+                    <Label Text="{Binding Destination}" Style="{StaticResource HeaderStyle}" Margin="6" />
+                </StackLayout>
+            </StackLayout>
+
+            <StackLayout Padding="6" BackgroundColor="DarkCyan" Opacity="0.3"  VerticalOptions="End" AbsoluteLayout.LayoutBounds="1, 1, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <Label Text="{Binding Status}" Margin="6" />
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage>
+    
+    <ContentPage Title="Fermate" >
+        <ContentPage.Resources>
+            <ResourceDictionary>
+                <DataTemplate x:Key="StopTemplate">
+                    <ViewCell>
+                        <Grid Padding="6">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Text="{Binding Stop}" Style="{StaticResource HeaderStyle}" Margin="6" />
+                            <StackLayout Grid.Row="1" Orientation="Horizontal">
+                                <Label Text="{Binding PlannedArrival, StringFormat='{}{0:HH:mm }'}" Margin="6" />
+                                
+                                <Label Text="{Binding ActualArrival, StringFormat='{}{0:HH:mm }'}" Margin="6" />
+                            </StackLayout>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ResourceDictionary>
+        </ContentPage.Resources>
+
+        <ContentPage.Content>
+            <ListView x:Name="StopsListView" HasUnevenRows="True" RowHeight="-1" ItemTapped="OnStopTapped" ItemTemplate="{StaticResource StopTemplate}" />
+        </ContentPage.Content>
+    </ContentPage>
+</TabbedPage>
