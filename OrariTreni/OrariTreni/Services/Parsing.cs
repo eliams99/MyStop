@@ -1,16 +1,23 @@
 ﻿using HtmlAgilityPack;
+using MyStop.Entities;
 using OrariTreni.Entities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
 namespace OrariTreni.Services
 {
-    class Parsing       // Aggiungere metodo che non considera le stazioni non esistenti
+    class Parsing : DelegatingHandler      // Aggiungere metodo che non considera le stazioni non esistenti
     {
         private async Task<HtmlDocument> DownloadStringAsync(string url, string stationAttributeName, string station)
         {
@@ -188,17 +195,37 @@ namespace OrariTreni.Services
             return stopItems;
         }
 
-        //public void Trenord(string departureStation, string arrivalStation)
-        //{
-        //    WebClient client = new WebClient();
-        //    client.QueryString.Add(stationAttributeName, departureStation);
-        //    client.QueryString.Add("lang", "IT");
-        //    var data = client.UploadValues(url, "POST", client.QueryString);
-        //    String downloadedString = UnicodeEncoding.UTF8.GetString(data);
+        public async Task MuoversiAsync()
+        {
+            HttpClient client = GetHttpClient();
+            client.BaseAddress = new Uri("https://muoversi2015.e015.servizirl.it/planner/rest/soluzioniJson/e015Search/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));     // Setting this header tells the server to send data in JSON format.
+            MuoversiResponse response = await GetResultsAsync("https://muoversi2015.e015.servizirl.it/planner/rest/soluzioniJson/e015Search/?param={'richiesta':{'from':'Milano, Via Torquato Taramelli,24','fromX':'9.19399499','fromY':'45.49122488','to':'Busto Arsizio Fs,Stazione','toX':'8.864713','toY':'45.615788','date':'18/05/2018','when':'11:20','options':['1','2','3','4','5','6'],'changeNumber':'-1','durationChange':'-1'},'lang':'it'}", client);
+        }
 
-        //    downloadedString = WebUtility.HtmlDecode(downloadedString);
-        //    HtmlDocument result = new HtmlDocument();
-        //    result.LoadHtml(downloadedString);
-        //}
+        static async Task<MuoversiResponse> GetResultsAsync(string path, HttpClient client)
+        {
+            MuoversiResponse muoversiResponse = null;
+            HttpResponseMessage response = await client.GetAsync(path);
+            if (response.IsSuccessStatusCode)
+            {
+                muoversiResponse = await response.Content.ReadAsAsync<MuoversiResponse>();
+            }
+            return muoversiResponse;
+        }
+
+        //@"C:\Users\elia_\Documents\Scuola\Progetto\E015\Muoversi\Allegati\certificati\E015.MyStop.p12"
+
+        private HttpClient GetHttpClient()
+        {
+            HttpClientHandler handler = new HttpClientHandler();
+
+
+            handler.ClientCertificates.Add(new X509Certificate2(File.ReadAllBytes("E015.MyStop.p12"), "MyStop_!EliaMusiu_4HaiUfrmur"));
+            HttpClient httpClient = new HttpClient(handler);
+
+            return httpClient;
+        }
     }
 }

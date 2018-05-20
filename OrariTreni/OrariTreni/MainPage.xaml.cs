@@ -1,5 +1,4 @@
-﻿using MyStop.Services;
-using OrariTreni.Entities;
+﻿using OrariTreni.Entities;
 using OrariTreni.Pages;
 using OrariTreni.Services;
 using System;
@@ -17,8 +16,8 @@ namespace OrariTreni
         public MainPage()
         {
             InitializeComponent();
-            Muoversi m = new Muoversi();
-            m.ProvaX509();
+            Parsing p = new Parsing();
+            p.MuoversiAsync();
         }
 
         private async void OnSearchStationButtonClicked(object sender, EventArgs e)

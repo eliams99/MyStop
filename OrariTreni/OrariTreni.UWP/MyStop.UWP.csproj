@@ -106,6 +106,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="E015.MyStop.p12" />
+    <EmbeddedResource Include="Assets\E015.MyStop.p12" />
     <None Include="OrariTreni.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
